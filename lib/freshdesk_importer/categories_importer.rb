@@ -6,5 +6,9 @@ module FreshdeskImporter
       @users_importer = users_importer
       @category_hash = category_hash
     end
+
+    def import
+      puts category_hash.keys
+    end
   end
 end

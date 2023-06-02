@@ -22,6 +22,8 @@ module FreshdeskImporter
       categories.each do |category_hash|
         categories_importer = CategoriesImporter.new(users_importer: users_importer, category_hash: category_hash)
         categories_importer.import
+
+        break
       end
     end
 
