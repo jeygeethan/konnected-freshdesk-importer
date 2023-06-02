@@ -7,3 +7,5 @@
 require_relative 'lib/freshdesk_importer/base_entity'
 require_relative 'lib/freshdesk_importer/users_importer'
 require_relative 'lib/freshdesk_importer/user_entity'
+require_relative 'lib/freshdesk_importer/forums_importer'
+require_relative 'lib/freshdesk_importer/categories_importer'

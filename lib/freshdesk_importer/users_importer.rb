@@ -26,9 +26,8 @@ module FreshdeskImporter
 
     def save_or_update_users
       @users_collection.each do |user_entity|
+        puts "Creating/updating user - #{user_entity.email}"
         user_entity.save_or_update
-
-        break
       end
     end
 

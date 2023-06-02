@@ -12,7 +12,6 @@ module FreshdeskImporter
 
     def save_or_update
       @user_email = UserEmail.where(email: email).first
-      puts "asd"
 
       if user_email.present?
         @user = user_email.user
