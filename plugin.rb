@@ -4,6 +4,6 @@
 # authors: Konnected Inc
 # url: https://github.com/jeygeethan/basic-plugin
 
-require_relative './lib/freshdesk_importer/se_entity'
+require_relative 'lib/freshdesk_importer/base_entity'
 require_relative 'lib/freshdesk_importer/users_importer'
 require_relative 'lib/freshdesk_importer/user_entity'
