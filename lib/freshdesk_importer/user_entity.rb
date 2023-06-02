@@ -1,6 +1,6 @@
 module FreshdeskImporter
   class UserEntity
-    attr_accessor :freshdesk_id, :hash, :name, :email, :user_email
+    attr_accessor :freshdesk_id, :hash, :name, :email, :user_email, :user
 
     def initialize(freshdesk_id:, name:, email:, hash:)
       @freshdesk_id = freshdesk_id
@@ -20,6 +20,8 @@ module FreshdeskImporter
       else
         save!
       end
+
+      user.activate
     end
 
     def save!
@@ -27,6 +29,11 @@ module FreshdeskImporter
       @user.username = generate_username
 
       @user_email = @user.build_primary_email(email: email)
+      @user.save!
+    end
+
+    def update!
+      @user.name = name
       @user.save!
     end
 
