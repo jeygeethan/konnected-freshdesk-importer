@@ -35,6 +35,16 @@ module FreshdeskImporter
       BaseEntity.root_path.to_s + IMPORT_PATH + "/*.xml"
     end
 
+    def find_by_freshdesk_id(freshdesk_user_id)
+      @users_collection.each do |user_entity|
+        if user_entity.hash["id"] == freshdesk_user_id
+          return user_entity.user
+        end
+      end
+
+      BaseEntity.admin_user
+    end
+
     private
 
     def import_all_files

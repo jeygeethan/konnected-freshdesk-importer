@@ -9,7 +9,17 @@ module FreshdeskImporter
     end
 
     def import
-      puts topic_hash.keys
+      user = users_importer.find_by_freshdesk_id(topic_hash["user_id"])
+      topic = category.topics.new(title: topic_hash["title"], user: user, created_at: topic_hash["created_at"],
+                                  updated_at: topic_hash["updated_at"])
+      topic.save(validate: false)
+
+      topic_hash["posts"].each do |post_hash|
+        user = users_importer.find_by_freshdesk_id(post_hash["user_id"])
+        post = topic.posts.new(user: user, raw: post_hash["body_html"], created_at: post_hash["created_at"],
+                               updated_at: post_hash["updated_at"])
+        post.save(validate: false)
+      end
     end
   end
 end
