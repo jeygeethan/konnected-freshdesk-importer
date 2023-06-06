@@ -44,7 +44,7 @@ module FreshdeskImporter
         end
       end
 
-      puts "*** User not found - using admin user ***"
+      puts "*** User not found - using admin user *** - #{freshdesk_user_id}"
       BaseEntity.admin_user
     end
 

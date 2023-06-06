@@ -45,8 +45,14 @@ module FreshdeskImporter
     def generate_username
       initial_username = email.split("@")[0]
 
-      if initial_username.size > 18
-        initial_username = initial_username[0..17]
+      initial_username = initial_username.gsub(/_+/, "_")
+      initial_username = initial_username.gsub(/\.+/, ".")
+      initial_username = initial_username.gsub(/\-+/, "-")
+      initial_username = initial_username.gsub(/\++/, "")
+
+      if initial_username.size > 16
+        initial_username = initial_username[0..15]
+        initial_username += "-u"
       elsif initial_username.size < 3
         initial_username += "-user"
       end
