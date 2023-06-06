@@ -20,6 +20,8 @@ module FreshdeskImporter
       users = Hash.from_xml(xml)
 
       users["users"].each do |user_hash|
+        next if user_hash['email'].nil? || user_hash['email'].blank?
+
         @users_collection << UserEntity.from_hash(user_hash)
       end
     end
@@ -42,6 +44,7 @@ module FreshdeskImporter
         end
       end
 
+      puts "*** User not found - using admin user ***"
       BaseEntity.admin_user
     end
 

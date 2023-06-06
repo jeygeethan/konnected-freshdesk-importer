@@ -20,7 +20,7 @@ module FreshdeskImporter
         save!
       end
 
-      user.activate
+      user.activate if user.persisted?
     end
 
     def save!
@@ -28,7 +28,13 @@ module FreshdeskImporter
       @user.username = generate_username
 
       @user_email = @user.build_primary_email(email: email)
-      @user.save!
+
+      if @user.valid?
+        @user.save!
+      else
+        puts "*** Validation error ***"
+        puts @user.errors.full_messages
+      end
     end
 
     def update!
@@ -38,6 +44,13 @@ module FreshdeskImporter
 
     def generate_username
       initial_username = email.split("@")[0]
+
+      if initial_username.size > 18
+        initial_username = initial_username[0..17]
+      elsif initial_username.size < 3
+        initial_username += "-user"
+      end
+
       repeated_username = initial_username
       count = 0
 
