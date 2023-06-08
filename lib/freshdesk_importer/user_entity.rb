@@ -32,9 +32,11 @@ module FreshdeskImporter
       if @user.valid?
         @user.save!
       else
-        puts "*** Validation error ***"
-        puts hash
-        puts @user.errors.full_messages
+        unless @user.errors.full_messages.join("") == "Primary email is invalid."
+          puts "*** Validation error ***"
+          puts hash
+          puts @user.errors.full_messages
+        end
       end
     end
 
