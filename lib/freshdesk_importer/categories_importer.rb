@@ -13,7 +13,7 @@ module FreshdeskImporter
       delete_all_topics_except_pinned
 
       category_hash["topics"].each do |topic_hash|
-        topic_importer = TopicImporter.new(users_importer: users_importer, category: category, topic_hash: topic_hash)
+        topic_importer = TopicImporter.new(users_importer: users_importer, category: category, topic_hash: topic_hash, seo_paths: seo_paths)
         topic_importer.import
       end
     end

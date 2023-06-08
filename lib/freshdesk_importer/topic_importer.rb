@@ -1,11 +1,12 @@
 module FreshdeskImporter
   class TopicImporter
-    attr_accessor :users_importer, :category, :topic_hash
+    attr_accessor :users_importer, :category, :topic_hash, :seo_paths
 
-    def initialize(users_importer:, category:, topic_hash:)
+    def initialize(users_importer:, category:, topic_hash:, seo_paths:)
       @users_importer = users_importer
       @category = category
       @topic_hash = topic_hash
+      @seo_paths = seo_paths
     end
 
     def import
@@ -22,6 +23,8 @@ module FreshdeskImporter
         post.save(validate: false)
         post.touch(time: post_hash["updated_at"])
       end
+
+      seo_paths.add("/support/discussions/topics/#{topic_hash["id"]}", "/t/#{topic.slug}/#{topic.id}")
     end
   end
 end
