@@ -26,6 +26,8 @@ module FreshdeskImporter
     def save!
       @user = User.new(name: name)
       @user.username = generate_username
+      @user.created_at = hash['created_at']
+      @user.updated_at = hash['updated_at']
 
       @user_email = @user.build_primary_email(email: email)
 
