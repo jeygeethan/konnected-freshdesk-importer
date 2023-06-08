@@ -1,10 +1,11 @@
 module FreshdeskImporter
   class CategoriesImporter
-    attr_accessor :users_importer, :category_hash, :category
+    attr_accessor :users_importer, :category_hash, :category, :seo_paths
 
-    def initialize(users_importer:, category_hash:)
+    def initialize(users_importer:, category_hash:, seo_paths:)
       @users_importer = users_importer
       @category_hash = category_hash
+      @seo_paths = seo_paths
     end
 
     def import
@@ -29,6 +30,8 @@ module FreshdeskImporter
                                  user: FreshdeskImporter::BaseEntity.admin_user)
         @category.save!
       end
+
+      seo_paths.add("/support/discussions/forums/#{category_hash["id"]}", "/c/#{@category.slug}/#{@category.id}")
     end
 
     def delete_all_topics_except_pinned

@@ -7,4 +7,7 @@ task "freshdesk-importer:import" => [:environment] do
 
   forums_importer = FreshdeskImporter::ForumsImporter.new(users_importer: users_importer)
   forums_importer.import
+
+  puts "### Done ###"
+  puts forums_importer.seo_paths.mappings.inspect
 end
