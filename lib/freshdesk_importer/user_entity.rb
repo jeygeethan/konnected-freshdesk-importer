@@ -56,6 +56,7 @@ module FreshdeskImporter
       initial_username = initial_username.gsub(/\++/, "")
       initial_username = initial_username.gsub(/\'+/, "")
       initial_username = initial_username.gsub(/\=+/, "")
+      initial_username = initial_username.gsub(/\%+/, "")
       initial_username = initial_username.gsub(/\_\./, "")
 
       unless initial_username.last.match?(/[a-zA-Z0-9]/)
