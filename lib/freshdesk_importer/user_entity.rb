@@ -20,7 +20,7 @@ module FreshdeskImporter
         save!
       end
 
-      user.activate if user.persisted?
+      # user.activate if user.persisted? && user.active == false
     end
 
     def save!
@@ -33,13 +33,14 @@ module FreshdeskImporter
         @user.save!
       else
         puts "*** Validation error ***"
+        puts hash
         puts @user.errors.full_messages
       end
     end
 
     def update!
-      @user.name = name
-      @user.save!
+      # @user.name = name
+      # @user.save!
     end
 
     def generate_username
@@ -49,12 +50,23 @@ module FreshdeskImporter
       initial_username = initial_username.gsub(/\.+/, ".")
       initial_username = initial_username.gsub(/\-+/, "-")
       initial_username = initial_username.gsub(/\++/, "")
+      initial_username = initial_username.gsub(/\'+/, "")
+      initial_username = initial_username.gsub(/\=+/, "")
+      initial_username = initial_username.gsub(/\_\./, "")
+
+      unless initial_username.last.match?(/[a-zA-Z0-9]/)
+        initial_username += "u"
+      end
+
+      unless initial_username.first.match?(/[a-zA-Z0-9]/)
+        initial_username = "u" + initial_username
+      end
 
       if initial_username.size > 16
         initial_username = initial_username[0..15]
-        initial_username += "-u"
+        initial_username += "u"
       elsif initial_username.size < 3
-        initial_username += "-user"
+        initial_username += "user"
       end
 
       repeated_username = initial_username
