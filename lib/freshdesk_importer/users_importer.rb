@@ -57,8 +57,6 @@ module FreshdeskImporter
       Dir[import_path].each do |file|
         puts "Importing file - " + file
         import_file(file)
-
-        break
       end
     end
   end
