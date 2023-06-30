@@ -2,14 +2,18 @@ module FreshdeskImporter
   class AttachmentsLister < BaseEntity
     IMPORT_PATH = "/data/forums"
 
-    def initialize()
-      super()
+    def initialize
+      super
+
+      @results = []
     end
 
     def list
       # list_all_files
-      check_for_url("https://konnected.freshdesk.com/support/discussions/topics/32000002144")
-      check_for_url("https://konnected.freshdesk.com/support/discussions/topics/32000002144/page/2")
+      list_all_files
+
+      puts ""
+      puts @results.inspect
     end
 
     def list_file(file)
@@ -21,23 +25,46 @@ module FreshdeskImporter
         category_hash["topics"].each do |topic_hash|
           url = "https://konnected.freshdesk.com/support/discussions/topics/#{topic_hash["id"]}"
           check_for_url(url)
-          break
         end
-
-        break
       end
     end
 
     def check_for_url(url)
+      result = { url: url, community_url: get_current_path(url), attachments: false, inline_images: false }
+      puts "*" * 80
       puts "Checking url - #{url}"
       response = HTTParty.get(url)
       puts "Status: #{response.code}"
       page = Nokogiri::HTML4(response.body)
 
-      if page.at_css('div.attachment')
-        puts "Attachment found"
-        puts get_current_path(url)
+      pages = page.css('div.pagination li').present? ? page.css('div.pagination li').size - 2 : 0
+      result[:pages] = pages
+
+      result[:attachments] = true if check_attachment(page)
+      result[:inline_images] = true if check_inline_images(page)
+
+      (2..pages).each do |page|
+        inner_page_response = HTTParty.get(url + "/page/" + page.to_s)
+        puts "Pagination: Page: #{page} - Status: #{inner_page_response.code}"
+        inner_page = Nokogiri::HTML4(inner_page_response.body)
+
+        result[:attachments] = true if check_attachment(inner_page)
+        result[:inline_images] = true if check_inline_images(inner_page)
       end
+
+      @results << result
+    end
+
+    def check_attachment(page)
+      page.css('div.attachment').present?
+    end
+
+    def check_inline_images(page)
+      page.css('img').each do |img|
+        return true if img[:src].include?("cdn.freshdesk.com")
+      end
+
+      false
     end
 
     def get_current_path(url)
