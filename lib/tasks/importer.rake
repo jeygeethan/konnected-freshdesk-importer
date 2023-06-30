@@ -11,3 +11,8 @@ task "freshdesk-importer:import" => [:environment] do
   puts "### Done ###"
   puts forums_importer.seo_paths.mappings.inspect
 end
+
+task "freshdesk-importer:attachments" => [:environment] do
+  lister = FreshdeskImporter::AttachmentsLister.new
+  lister.list
+end
