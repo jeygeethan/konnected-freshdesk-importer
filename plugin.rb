@@ -12,3 +12,8 @@ require_relative 'lib/freshdesk_importer/categories_importer'
 require_relative 'lib/freshdesk_importer/topic_importer'
 require_relative 'lib/freshdesk_importer/seo_paths'
 require_relative 'lib/freshdesk_importer/attachments_lister'
+
+gem 'httparty', '0.21.0', {require: false }
+gem 'csv', '3.2.7', {require: false }
+
+require 'httparty'

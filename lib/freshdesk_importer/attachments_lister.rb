@@ -21,11 +21,15 @@ module FreshdeskImporter
           check_for_url(url)
           break
         end
+
+        break
       end
     end
 
     def check_for_url(url)
-      
+      puts "Checking url - #{url}"
+      response = HTTParty.get(url)
+      puts response.code
     end
 
     private
