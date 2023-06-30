@@ -7,7 +7,9 @@ module FreshdeskImporter
     end
 
     def list
-      list_all_files
+      # list_all_files
+      check_for_url("https://konnected.freshdesk.com/support/discussions/topics/32000002144")
+      check_for_url("https://konnected.freshdesk.com/support/discussions/topics/32000002144/page/2")
     end
 
     def list_file(file)
@@ -29,7 +31,17 @@ module FreshdeskImporter
     def check_for_url(url)
       puts "Checking url - #{url}"
       response = HTTParty.get(url)
-      puts response.code
+      puts "Status: #{response.code}"
+      page = Nokogiri::HTML4(response.body)
+
+      if page.at_css('div.attachment')
+        puts "Attachment found"
+        puts get_current_path(url)
+      end
+    end
+
+    def get_current_path(url)
+      REDIRECTION_PATHS[url]
     end
 
     private
