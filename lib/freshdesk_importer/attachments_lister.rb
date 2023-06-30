@@ -22,31 +22,37 @@ module FreshdeskImporter
       xml = File.open(file)
       forums = Hash.from_xml(xml)
 
-      last_checked = "32000002773"
-      skip = true
+      # last_checked = "32000002773"
+      # skip = true
+
+      count = 0
 
       categories = forums["forum_categories"][0]["forums"]
       categories.each do |category_hash|
         category_hash["topics"].each do |topic_hash|
-          if topic_hash["id"] == last_checked.to_i
-            skip = false
-          end
-
-          next if skip == true
+          # if topic_hash["id"] == last_checked.to_i
+          #   skip = false
+          # end
+          #
+          # next if skip == true
 
           url = "https://konnected.freshdesk.com/support/discussions/topics/#{topic_hash["id"]}"
           check_for_url(url)
+          puts "Count: #{count += 1}"
         end
       end
     end
 
     def check_for_url(url)
       result = { url: url, community_url: get_current_path(url), attachments: false, inline_images: false }
+
       puts "*" * 80
       puts "Checking url - #{url}"
       response = HTTParty.get(url)
       puts "Status: #{response.code}"
       page = Nokogiri::HTML4(response.body)
+
+      result[:status] = response.code
 
       pages = page.css('div.pagination li').present? ? page.css('div.pagination li').size - 2 : 0
       result[:pages] = pages
