@@ -12,6 +12,8 @@ module FreshdeskImporter
       # list_all_files
       list_all_files
 
+      # check_for_url("https://konnected.freshdesk.com/support/discussions/topics/32000002773")
+
       puts ""
       puts @results.inspect
     end
@@ -20,9 +22,18 @@ module FreshdeskImporter
       xml = File.open(file)
       forums = Hash.from_xml(xml)
 
+      last_checked = "32000002773"
+      skip = true
+
       categories = forums["forum_categories"][0]["forums"]
       categories.each do |category_hash|
         category_hash["topics"].each do |topic_hash|
+          if topic_hash["id"] == last_checked.to_i
+            skip = false
+          end
+
+          next if skip == true
+
           url = "https://konnected.freshdesk.com/support/discussions/topics/#{topic_hash["id"]}"
           check_for_url(url)
         end
@@ -61,6 +72,8 @@ module FreshdeskImporter
 
     def check_inline_images(page)
       page.css('img').each do |img|
+        next if img[:src].blank?
+
         return true if img[:src].include?("cdn.freshdesk.com")
       end
 
